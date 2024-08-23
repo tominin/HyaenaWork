@@ -1,17 +1,34 @@
-##HyaenaWork
-Details for how to run my filtering code at the command line, as well as the logic used to create the graphic output if someone would ever like to recreate this procedure.
+##HyaenaWork##
+Full workings of creating my hyaena diagnostic positions, with some scripts that the user can use or alter to there needs.
 
-After running mmeyer's define_diagnostic positions script previously we need to remove any diagnostic positions that are over represented due to mitochondrial capture bias.
+##STEP 1##
+Sequence Alignment:
+Download all files in Hyena_datafile.docx (from NCBI):
+Stack seq's in BioEdit, ensure NC_020671.1 is top (for coordinates later)
+COMMAND LINE ARG: (install mafft prior)
+mafft file > mafft_joint.fas
 
-Important! Ensure that you have created the derived state as group B and the ancestral as group A when you ran the code
+Open mafft_joint.fas
+Cut and paste under/overlaps at the end and beginning of reads due to
+mitochondria's circular nature.
+Add insertions in genomes that dont align quite right (only need to do a few)
 
+From this file get all the different groups (Haplogroup A, Haplogroup B, Haplogroup C, Haplogroup D, Proteles cristata, Striped Hyaena, Brown Hyaena) seperated into seperate files for
+mmeyer script. All still need the NC_020671.1 at the top of the alignment.
+
+##STEP 2##
+UNIX command to define diagnostic pos for each haplogroup:
+(Example)
+/home/mmeyer/perlscripts/solexa/analysis/define_informative_positions_generic.pl -definitions A,Brown,1,/r1/people/thomas_harris_snell/hyena_mtDNA/brown_hyena/mafft_brown.fas:A,Striped,1,/r1/people/thomas_harris_snell/hyena_mtDNA/striped_hyena/mafft_striped.fas:A,Proteles,1,/r1/people/thomas_harris_snell/hyena_mtDNA/proteles/mafft_proteles.fas:A,Haplo_B,1,/r1/people/thomas_harris_snell/hyena_mtDNA/crocuta/mafft_hpgB:A,Haplo_C,1,/r1/people/thomas_harris_snell/hyena_mtDNA/crocuta/mafft_hpgC.fas:A,Haplo_D,1,/r1/people/thomas_harris_snell/hyena_mtDNA/crocuta/mafft_hpgD:B,Haplo_A,1,/r1/people/thomas_harris_snell/hyena_mtDNA/crocuta/mafft_hpgA.fas > /r1/people/thomas_harris_snell/hyena_mtDNA/hyena_dps/pre_edit/hpgA_prefilt.txt
+
+Important to note that the derived group should be in B, not A!
+
+##STEP 3##
+Filtering out over-represented diagnostic positions
 Create a bam directory with all selected bam files that you would like to run and analyse for Crocuta crocuta species. For this when cp the files from the sediment directory ensure to add a uniq letter for each run ID as there can be duplicate CapLibID/IndexLibID's therefore removing some of your desired data.
-
 Then you are all ready to run the filtering scripts:
 
-1ST COMMAND:
-
-bash concater_pre_filt.sh [path to bam files] [path to a directory that holds the intermediate files made] | python filt_dps_script.py [path to where the final output of your script goes]
+1ST COMMAND: bash concater_pre_filt.sh [path to bam files] [path to a directory that holds the intermediate files made] | python filt_dps_script.py [path to where the final output of your script goes]
 
 2ND COMMAND: bash concater_pos_filt.sh
 
@@ -20,3 +37,20 @@ bash concater_pre_filt.sh [path to bam files] [path to a directory that holds th
 This will output: The filtered diagnostic pos file of all 4 haplogroups The filtered count reads from the selected bam files
 
 Please note that the filtered pos should be done every time you analyse a new set of data!
+
+
+##STEP 4##
+Post running analysis, I have submitted my code for the user to read through, as long as they have the relevant datafiles with their output from mmeyer's scripts they should be able to quite easily alter my code to their need. Some changes with how layers are seperated may need to be done and different syntax readings may need to be taken into account.
+Script = quicksand.automated.py
+
+NOTES
+Filters used in script:
+Removes any samples that had lower than 3 hits for the group we want to investigate
+Removes any samples that fall below the binomial distribution confidence interval for the l>
+Ensure to use time gaps from file #layerdates_ZJ.txt
+Remove duplicate sample IDs
+Count the number of samples (NOT THE NUMBER OF SEQUENCES IN EACH BAM FILE) that showed sign>
+Obtain total percentage for the count of each haplogroups for each layer.
+To know which sample is in which layer use file #layers_ZJ_04012021.txt
+
+

@@ -1,0 +1,10 @@
+##list of packages required
+biopython
+graph
+matplotlib
+numpy
+pandas
+python v 3.12.4
+scipy
+excel
+statsmodels
