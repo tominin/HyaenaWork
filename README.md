@@ -36,7 +36,7 @@ Then you are all ready to run the filtering scripts:
 
 This will output: The filtered diagnostic pos file of all 4 haplogroups The filtered count reads from the selected bam files
 
-Please note that the filtered pos should be done every time you analyse a new set of data!
+Please note that the filtered pos should be done every time you analyse a new set of data! (HYAENA ONLY)
 
 
 ##STEP 4##
@@ -46,11 +46,17 @@ Script = quicksand.automated.py
 NOTES
 Filters used in script:
 Removes any samples that had lower than 3 hits for the group we want to investigate
-Removes any samples that fall below the binomial distribution confidence interval for the l>
+
+Removes any samples that fall below the binomial distribution 95% confidence interval for the lowest bound at 10% coverage
+
 Ensure to use time gaps from file #layerdates_ZJ.txt
+
 Remove duplicate sample IDs
-Count the number of samples (NOT THE NUMBER OF SEQUENCES IN EACH BAM FILE) that showed sign>
-Obtain total percentage for the count of each haplogroups for each layer.
+
+Count the number of samples (NOT THE NUMBER OF SEQUENCES IN EACH BAM FILE) that showed significant occurance rates
+
+Obtain total percentage for the count of each haplogroups for each layer
+
 To know which sample is in which layer use file #layers_ZJ_04012021.txt
 
 
